@@ -1,0 +1,271 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Blog - Rate Your Journey</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: url('https://th.bing.com/th/id/OIP.ZyKJmD_r0Ql3fUheE1OY5wHaEo?rs=1&pid=ImgDetMain') no-repeat center center fixed;
+        background-size: cover;
+        padding: 20px;
+        backdrop-filter: blur(5px); /* Adjust the blur value as needed */
+    }
+    .form-container {
+        background-color: rgba(255, 255, 255, 0.8); /* Making it slightly transparent */
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+    }
+        .form-container h2 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        .rating-stars {
+            display: flex;
+            justify-content: space-between;
+            width: 150px;
+            margin: 0 auto;
+        }
+        .star {
+            font-size: 30px;
+            cursor: pointer;
+            color: #ccc;
+        }
+        .star:hover, .star.selected {
+            color: gold;
+        }
+  
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+        .success-message {
+            text-align: center;
+            margin-top: 20px;
+            color: green;
+        }
+        .transaction-id {
+            display: none;
+        }
+    </style>
+</head>
+<body><center>
+
+    <div class="form-container">
+        <h1>ABU TRAVELS</h1>
+        <h2>Rate Your Travel Journey</h2>
+
+        <!-- Name Input -->
+        <div class="form-group">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" placeholder="Enter your name" required>
+        </div>
+
+        <!-- Email Input -->
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Enter your email">
+        </div>
+
+        <!-- Mobile Number Input -->
+        <div class="form-group">
+            <label for="mobile">Mobile Number:</label>
+		<span>+91</span>
+            <input type="tel" id="mobile" placeholder="Enter your mobile number" required>
+        </div>
+
+        <!-- City Input -->
+        <div class="form-group">
+            <label for="city">City:</label>
+            <input type="text" id="city" placeholder="Enter city name" required>
+        </div>
+
+        <!-- Pickup Location -->
+        <div class="form-group">
+            <label for="pickup">Pickup Location:</label>
+            <textarea id="pickup" placeholder="Enter pickup location" required></textarea>
+        </div>
+
+        <!-- Drop Location -->
+        <div class="form-group">
+            <label for="drop">Drop Location:</label>
+            <textarea id="drop" placeholder="Enter drop location" required></textarea>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="form-group">
+            <label for="paymentMethod">Payment Method:</label>
+            <select id="paymentMethod" onchange="toggleTransactionId()">
+                <option value="Offline">Offline</option>
+                <option value="Online">Online</option>
+            </select>
+        </div>
+
+        <!-- Transaction ID (for online payment) -->
+        <div class="form-group transaction-id" id="transactionIdContainer">
+            <label for="transactionId">Transaction ID (for online payment):</label>
+            <input type="text" id="transactionId" placeholder="Enter transaction ID">
+        </div>
+
+        <!-- Rating Stars -->
+      <div class="form-group">
+    <label>Rate Your Journey:</label>
+    <div class="rating-stars" id="stars">
+        <span class="star" data-rating="1">&#9733;</span>
+        <span class="star" data-rating="2">&#9733;</span>
+        <span class="star" data-rating="3">&#9733;</span>
+        <span class="star" data-rating="4">&#9733;</span>
+        <span class="star" data-rating="5">&#9733;</span>
+    </div>
+    <div id="ratingValue" style="text-align: center; margin-top: 10px;"></div> <!-- Add this line -->
+</div>
+
+
+        <button class="submit-btn" onclick="submitForm()">Submit</button>
+
+        <div class="success-message" id="successMessage"></div>
+    </div>
+
+    <script>
+        let selectedRating = 0;
+
+        // Handle the star rating selection
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = this.getAttribute('data-rating');
+                selectedRating = rating;
+                updateStars(rating);
+            });
+        });
+
+        function updateStars(rating) {
+            document.querySelectorAll('.star').forEach(star => {
+                if (star.getAttribute('data-rating') <= rating) {
+                    star.classList.add('selected');
+                } else {
+                    star.classList.remove('selected');
+                }
+            });
+
+            // Update the rating value based on the selected rating
+            const ratingDescriptions = [
+                "Below Average", // 1 Star
+                "Average",       // 2 Stars
+                "Good",          // 3 Stars
+                "Better",        // 4 Stars
+                "Best"           // 5 Stars
+            ];
+
+            document.getElementById('ratingValue').innerText = ratingDescriptions[rating - 1]; // Update the text
+        }
+
+        // Toggle transaction ID field based on payment method
+        function toggleTransactionId() {
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const transactionIdContainer = document.getElementById('transactionIdContainer');
+            if (paymentMethod === 'Online') {
+                transactionIdContainer.style.display = 'block';
+            } else {
+                transactionIdContainer.style.display = 'none';
+            }
+        }
+
+        // Form Validation and Submission
+        async function submitForm() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const mobile = document.getElementById('mobile').value;
+            const city = document.getElementById('city').value;
+            const pickup = document.getElementById('pickup').value;
+            const drop = document.getElementById('drop').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const transactionId = document.getElementById('transactionId').value;
+
+            // Basic validation for name, email, and mobile number
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const mobilePattern = /^[0-9]{10}$/;
+
+            if (!name || !email || !mobile || !city || !pickup || !drop || selectedRating === 0) {
+                alert('Please fill out all fields and select a rating.');
+                return;
+            }
+
+            if (!emailPattern.test(email)) {
+                alert('Please enter a valid email.');
+                return;
+            }
+
+            if (!mobilePattern.test(mobile)) {
+                alert('Please enter a valid 10-digit mobile number.');
+                return;
+            }
+
+            if (paymentMethod === 'Online' && !transactionId) {
+                alert('Please enter the transaction ID for online payment.');
+                return;
+            }
+
+            const data = {
+                name: name,
+                email: email,
+                mobile: mobile,
+                city: city,
+                pickupLocation: pickup,
+                dropLocation: drop,
+                rating: selectedRating,
+                paymentMethod: paymentMethod,
+                transactionId: paymentMethod === 'Online' ? transactionId : null
+            };
+
+            try {
+                const response = await fetch('http://localhost:5000/journey', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('successMessage').innerText = `Thank you, ${name}! Your journey has been rated ${selectedRating} stars.`;
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error submitting form:', error);
+            }
+        }
+    </script>
+
+</body>
+</html>
