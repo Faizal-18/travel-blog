@@ -82,71 +82,77 @@
         <h1>ABU TRAVELS</h1>
         <h2>Rate Your Travel Journey</h2>
 
-        <!-- Name Input -->
-        <div class="form-group">
-            <label for="name">Your Name:</label>
-            <input type="text" id="name" placeholder="Enter your name" required>
-        </div>
-
-        <!-- Email Input -->
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" placeholder="Enter your email" required>
-        </div>
-
-        <!-- Mobile Number Input -->
-        <div class="form-group">
-            <label for="mobile">Mobile Number:</label>
-            <input type="tel" id="mobile" placeholder="Enter your mobile number" required>
-        </div>
-
-        <!-- City Input -->
-        <div class="form-group">
-            <label for="city">City:</label>
-            <input type="text" id="city" placeholder="Enter city name" required>
-        </div>
-
-        <!-- Pickup Location -->
-        <div class="form-group">
-            <label for="pickup">Pickup Location:</label>
-            <textarea id="pickup" placeholder="Enter pickup location" required></textarea>
-        </div>
-
-        <!-- Drop Location -->
-        <div class="form-group">
-            <label for="drop">Drop Location:</label>
-            <textarea id="drop" placeholder="Enter drop location" required></textarea>
-        </div>
-
-        <!-- Payment Method -->
-        <div class="form-group">
-            <label for="paymentMethod">Payment Method:</label>
-            <select id="paymentMethod" onchange="toggleTransactionId()">
-                <option value="Offline">Offline</option>
-                <option value="Online">Online</option>
-            </select>
-        </div>
-
-        <!-- Transaction ID (for online payment) -->
-        <div class="form-group transaction-id" id="transactionIdContainer">
-            <label for="transactionId">Transaction ID (for online payment):</label>
-            <input type="text" id="transactionId" placeholder="Enter transaction ID">
-        </div>
-
-        <!-- Rating Stars -->
-        <div class="form-group">
-            <label>Rate Your Journey:</label>
-            <div class="rating-stars" id="stars">
-                <span class="star" data-rating="1">&#9733;</span>
-                <span class="star" data-rating="2">&#9733;</span>
-                <span class="star" data-rating="3">&#9733;</span>
-                <span class="star" data-rating="4">&#9733;</span>
-                <span class="star" data-rating="5">&#9733;</span>
+        <!-- PHP form submission -->
+        <form action="submit_journey.php" method="POST" onsubmit="return validateForm()">
+            
+            <!-- Name Input -->
+            <div class="form-group">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
             </div>
-            <div id="ratingValue" style="text-align: center; margin-top: 10px;"></div>
-        </div>
 
-        <button class="submit-btn" onclick="submitForm()">Submit</button>
+            <!-- Email Input -->
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <!-- Mobile Number Input -->
+            <div class="form-group">
+                <label for="mobile">Mobile Number:</label>
+                <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" required>
+            </div>
+
+            <!-- City Input -->
+            <div class="form-group">
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city" placeholder="Enter city name" required>
+            </div>
+
+            <!-- Pickup Location -->
+            <div class="form-group">
+                <label for="pickup">Pickup Location:</label>
+                <textarea id="pickup" name="pickupLocation" placeholder="Enter pickup location" required></textarea>
+            </div>
+
+            <!-- Drop Location -->
+            <div class="form-group">
+                <label for="drop">Drop Location:</label>
+                <textarea id="drop" name="dropLocation" placeholder="Enter drop location" required></textarea>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="form-group">
+                <label for="paymentMethod">Payment Method:</label>
+                <select id="paymentMethod" name="paymentMethod" onchange="toggleTransactionId()">
+                    <option value="Offline">Offline</option>
+                    <option value="Online">Online</option>
+                </select>
+            </div>
+
+            <!-- Transaction ID (for online payment) -->
+            <div class="form-group transaction-id" id="transactionIdContainer">
+                <label for="transactionId">Transaction ID (for online payment):</label>
+                <input type="text" id="transactionId" name="transactionId" placeholder="Enter transaction ID">
+            </div>
+
+            <!-- Rating Stars -->
+            <div class="form-group">
+                <label>Rate Your Journey:</label>
+                <div class="rating-stars" id="stars">
+                    <span class="star" data-rating="1">&#9733;</span>
+                    <span class="star" data-rating="2">&#9733;</span>
+                    <span class="star" data-rating="3">&#9733;</span>
+                    <span class="star" data-rating="4">&#9733;</span>
+                    <span class="star" data-rating="5">&#9733;</span>
+                </div>
+                <input type="hidden" id="rating" name="rating" value="">
+                <div id="ratingValue" style="text-align: center; margin-top: 10px;"></div>
+            </div>
+
+            <button class="submit-btn" type="submit">Submit</button>
+
+        </form>
 
         <div class="success-message" id="successMessage"></div>
     </div>
@@ -160,6 +166,7 @@
                 const rating = this.getAttribute('data-rating');
                 selectedRating = rating;
                 updateStars(rating);
+                document.getElementById('rating').value = rating; // Store rating in hidden input
             });
         });
 
@@ -171,9 +178,7 @@
                     star.classList.remove('selected');
                 }
             });
-            const ratingDescriptions = [
-                "Below Average", "Average", "Good", "Better", "Best"
-            ];
+            const ratingDescriptions = ["Below Average", "Average", "Good", "Better", "Best"];
             document.getElementById('ratingValue').innerText = ratingDescriptions[rating - 1];
         }
 
@@ -184,8 +189,8 @@
             transactionIdContainer.style.display = paymentMethod === 'Online' ? 'block' : 'none';
         }
 
-        // Form Validation and Submission
-        async function submitForm() {
+        // Form validation
+        function validateForm() {
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const mobile = document.getElementById('mobile').value;
@@ -200,53 +205,25 @@
 
             if (!name || !email || !mobile || !city || !pickup || !drop || selectedRating === 0) {
                 alert('Please fill out all fields and select a rating.');
-                return;
+                return false;
             }
 
             if (!emailPattern.test(email)) {
                 alert('Please enter a valid email.');
-                return;
+                return false;
             }
 
             if (!mobilePattern.test(mobile)) {
                 alert('Please enter a valid 10-digit mobile number.');
-                return;
+                return false;
             }
 
             if (paymentMethod === 'Online' && !transactionId) {
                 alert('Please enter the transaction ID for online payment.');
-                return;
+                return false;
             }
 
-            const data = {
-                name: name,
-                email: email,
-                mobile: mobile,
-                city: city,
-                pickupLocation: pickup,
-                dropLocation: drop,
-                rating: selectedRating,
-                paymentMethod: paymentMethod,
-                transactionId: paymentMethod === 'Online' ? transactionId : null
-            };
-
-            try {
-                const response = await fetch('http://localhost:5000/journey', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    document.getElementById('successMessage').innerText = `Thank you, ${name}! Your journey has been rated ${selectedRating} stars.`;
-                } else {
-                    alert('Error: ' + result.error);
-                }
-            } catch (error) {
-                console.error('Error submitting form:', error);
-            }
+            return true;
         }
     </script>
 </body>
