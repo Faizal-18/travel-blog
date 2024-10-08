@@ -1,24 +1,25 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travel Blog - Rate Your Journey</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        background: url('https://th.bing.com/th/id/OIP.ZyKJmD_r0Ql3fUheE1OY5wHaEo?rs=1&pid=ImgDetMain') no-repeat center center fixed;
-        background-size: cover;
-        padding: 20px;
-        backdrop-filter: blur(5px); /* Adjust the blur value as needed */
-    }
-    .form-container {
-        background-color: rgba(255, 255, 255, 0.8); /* Making it slightly transparent */
-        padding: 20px;
-        max-width: 600px;
-        margin: 0 auto;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
-    }
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://th.bing.com/th/id/OIP.ZyKJmD_r0Ql3fUheE1OY5wHaEo?rs=1&pid=ImgDetMain') no-repeat center center fixed;
+            background-size: cover;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+        }
         .form-container h2 {
             text-align: center;
         }
@@ -30,7 +31,7 @@
             margin-bottom: 5px;
         }
         input, select {
-            width: 70%;
+            width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -53,7 +54,6 @@
         .star:hover, .star.selected {
             color: gold;
         }
-  
         .submit-btn {
             width: 100%;
             padding: 10px;
@@ -77,8 +77,7 @@
         }
     </style>
 </head>
-<body><center>
-
+<body>
     <div class="form-container">
         <h1>ABU TRAVELS</h1>
         <h2>Rate Your Travel Journey</h2>
@@ -92,13 +91,12 @@
         <!-- Email Input -->
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" id="email" placeholder="Enter your email">
+            <input type="email" id="email" placeholder="Enter your email" required>
         </div>
 
         <!-- Mobile Number Input -->
         <div class="form-group">
             <label for="mobile">Mobile Number:</label>
-		<span>+91</span>
             <input type="tel" id="mobile" placeholder="Enter your mobile number" required>
         </div>
 
@@ -136,18 +134,17 @@
         </div>
 
         <!-- Rating Stars -->
-      <div class="form-group">
-    <label>Rate Your Journey:</label>
-    <div class="rating-stars" id="stars">
-        <span class="star" data-rating="1">&#9733;</span>
-        <span class="star" data-rating="2">&#9733;</span>
-        <span class="star" data-rating="3">&#9733;</span>
-        <span class="star" data-rating="4">&#9733;</span>
-        <span class="star" data-rating="5">&#9733;</span>
-    </div>
-    <div id="ratingValue" style="text-align: center; margin-top: 10px;"></div> <!-- Add this line -->
-</div>
-
+        <div class="form-group">
+            <label>Rate Your Journey:</label>
+            <div class="rating-stars" id="stars">
+                <span class="star" data-rating="1">&#9733;</span>
+                <span class="star" data-rating="2">&#9733;</span>
+                <span class="star" data-rating="3">&#9733;</span>
+                <span class="star" data-rating="4">&#9733;</span>
+                <span class="star" data-rating="5">&#9733;</span>
+            </div>
+            <div id="ratingValue" style="text-align: center; margin-top: 10px;"></div>
+        </div>
 
         <button class="submit-btn" onclick="submitForm()">Submit</button>
 
@@ -174,28 +171,17 @@
                     star.classList.remove('selected');
                 }
             });
-
-            // Update the rating value based on the selected rating
             const ratingDescriptions = [
-                "Below Average", // 1 Star
-                "Average",       // 2 Stars
-                "Good",          // 3 Stars
-                "Better",        // 4 Stars
-                "Best"           // 5 Stars
+                "Below Average", "Average", "Good", "Better", "Best"
             ];
-
-            document.getElementById('ratingValue').innerText = ratingDescriptions[rating - 1]; // Update the text
+            document.getElementById('ratingValue').innerText = ratingDescriptions[rating - 1];
         }
 
         // Toggle transaction ID field based on payment method
         function toggleTransactionId() {
             const paymentMethod = document.getElementById('paymentMethod').value;
             const transactionIdContainer = document.getElementById('transactionIdContainer');
-            if (paymentMethod === 'Online') {
-                transactionIdContainer.style.display = 'block';
-            } else {
-                transactionIdContainer.style.display = 'none';
-            }
+            transactionIdContainer.style.display = paymentMethod === 'Online' ? 'block' : 'none';
         }
 
         // Form Validation and Submission
@@ -209,7 +195,6 @@
             const paymentMethod = document.getElementById('paymentMethod').value;
             const transactionId = document.getElementById('transactionId').value;
 
-            // Basic validation for name, email, and mobile number
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             const mobilePattern = /^[0-9]{10}$/;
 
@@ -248,9 +233,7 @@
             try {
                 const response = await fetch('http://localhost:5000/journey', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
 
@@ -266,6 +249,5 @@
             }
         }
     </script>
-
 </body>
 </html>
